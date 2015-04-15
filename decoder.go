@@ -9,6 +9,7 @@ import (
 )
 
 var MAGIC_NUM = []byte{0x53, 0x50, 0x4c, 0x49, 0x43, 0x45}
+
 var ErrMagicNumberInvalid = errors.New("magic number invalid")
 
 // DecodeFile decodes the drum machine file found at the provided path
@@ -45,29 +46,18 @@ func (dec *Decoder) Decode(p *Pattern) error {
 		return dec.err
 	}
 
-	// Magic Number - 6 bytes
-	magic := make([]byte, 6)
-	n, err := dec.r.Read(magic)
-	if n != 6 {
-		dec.err = ErrMagicNumberInvalid
+	header := struct {
+		Magic    [6]byte
+		FileSize int64
+	}{}
+	err := binary.Read(dec.r, binary.BigEndian, &header)
+	if string(header.Magic[:]) != "SPLICE" {
 		return ErrMagicNumberInvalid
-	} else if err != nil {
-		dec.err = err
-		return err
 	}
 
-	// File Size - 8 bytes, int64, BigEndian
-	var fileSize int64
-	err = binary.Read(dec.r, binary.BigEndian, &fileSize)
-	if err != nil {
-		dec.err = err
-		return err
-	}
-
-	// Now that we have the file size, limit our reader
 	dec.r = &io.LimitedReader{
 		R: dec.r,
-		N: fileSize,
+		N: header.FileSize,
 	}
 
 	// Version - 32 bytes
