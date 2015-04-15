@@ -10,16 +10,16 @@ import (
 
 // Pattern is the high level representation of the
 // drum pattern contained in a .splice file.
-// TODO: implement
 type Pattern struct {
-	Version []byte
+	Version string
 	Tempo   float32
 	Tracks  []*Track
 }
 
+// String returns a string representation of a Pattern
 func (p *Pattern) String() string {
 	var buf bytes.Buffer
-	buf.WriteString("Saved with HW Version: " + string(p.Version[:]))
+	buf.WriteString("Saved with HW Version: " + p.Version)
 	buf.WriteByte('\n')
 	buf.WriteString("Tempo: " + strconv.FormatFloat(float64(p.Tempo), 'f', -1, 32))
 	buf.WriteByte('\n')
@@ -30,9 +30,11 @@ func (p *Pattern) String() string {
 	return buf.String()
 }
 
+// Track is the high level representation of one musical
+// instrument contained in a Pattern
 type Track struct {
 	ID    int32
-	Name  []byte
+	Name  string
 	Steps []bool
 }
 
