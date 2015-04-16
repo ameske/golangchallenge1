@@ -8,10 +8,7 @@ import (
 	"os"
 )
 
-var (
-	MAGIC_NUM = []byte{0x53, 0x50, 0x4c, 0x49, 0x43, 0x45}
-)
-
+// Error when a pattern file's magic number is incorrect
 var (
 	ErrMagicNumberInvalid = errors.New("pattern: magic number invalid")
 )
