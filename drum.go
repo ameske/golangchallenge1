@@ -19,10 +19,14 @@ type Pattern struct {
 // String returns a string representation of a Pattern
 func (p *Pattern) String() string {
 	var buf bytes.Buffer
-	buf.WriteString("Saved with HW Version: " + p.Version)
+
+	buf.WriteString("Saved with HW Version: ")
+	buf.WriteString(p.Version)
 	buf.WriteByte('\n')
-	buf.WriteString("Tempo: " + strconv.FormatFloat(float64(p.Tempo), 'f', -1, 32))
+	buf.WriteString("Tempo: ")
+	buf.WriteString(strconv.FormatFloat(float64(p.Tempo), 'f', -1, 32))
 	buf.WriteByte('\n')
+
 	for _, t := range p.Tracks {
 		buf.WriteString(t.String())
 	}
@@ -40,6 +44,7 @@ type Track struct {
 
 func (t Track) String() string {
 	var buf bytes.Buffer
+
 	buf.WriteString(fmt.Sprintf("(%d) %s\t", t.ID, t.Name))
 
 	count := 0
@@ -55,8 +60,7 @@ func (t Track) String() string {
 		count++
 	}
 
-	buf.WriteByte('|')
-	buf.WriteByte('\n')
+	buf.WriteString("|\n")
 
 	return buf.String()
 }
